@@ -11,13 +11,13 @@
 
 <div class="row">
     <div class="col-md-6">
-        <h2>Reward or Punish</h2>
+        <h2>Reward</h2>
         <p>
             Has your kid been behaving extra well recently? Perhaps poorly?
             Why not reward him by depositing to (or withdrawing from) his PoD account?
         </p>
 
-        <input type="number" id="number" />
+        <input type="number" id="number" class="input-sm"/>
         <button onclick="submit()">Reward</button>
         <div>
             <span id="rewardsMessage" class="bg-success">
@@ -38,6 +38,33 @@
             }
         </script>
 
+        <br />
+        <div>
+            <div>
+                <form action="/Form/SendMessageToDevice" method="post">
+                    Control:
+                    <br />
+                       <select name="message">
+                        <option value="unlimited">Unlimited</option>
+                        <option value="reset">Reset</option>
+                    </select>
+                 
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
+            <br />
+            <div>
+                <p class="btn btn-danger" onclick="shutDown()">Shut down!</p>
+            </div>
+            <script>
+        function shutDown() {
+            $.get("/Form/ShutDown", function () {
+                alert("TV shut down successfully");
+            });
+        }
+            </script>
+        </div>
+
     </div>
     <div class="col-md-6">
         <h2>Current Balance</h2>
@@ -51,6 +78,12 @@
             </h2>
         </div>
         <button onclick="balanceRefresh()">Refresh</button>
+        <br />
+        <br/>
+
+        <p>
+            <a href="https://analytics.applicationinsights.io/subscriptions/bcbd775a-813c-46e8-afe5-1a66912e0f03/resourcegroups/PoD_Hackathon/components/PoD_1?q=H4sIAAAAAAAAAx2KMQrDMBAEe79iO9uQJg9Ql4%2BclAUd5IQ5STYOeXwsTzUwAxiba6qYgN%2BR6UQRYwjzS2uTkjiPgtrNxPVLDF12%2BXSuiCeilqWp8Zpte%2BCZ1%2Ft3ljcdUTxl8YaL6Q%2BO2qcRbQAAAA%3D%3D&apptype=web" class="btn btn-info btn-xs">Click here for some statistics</a>
+        </p>
     </div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -64,15 +97,5 @@
     </script>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <p class="btn btn-danger" onclick="shutDown()">Shut down!</p>
-    </div>
-    <script>
-        function shutDown() {
-            $.get("/Form/ShutDown", function () {
-                alert("TV shut down successfully");
-            });
-        }
-    </script>
-</div>
+
+

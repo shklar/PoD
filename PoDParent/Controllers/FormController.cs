@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Text;
+using Microsoft.Azure.Devices;
 
 namespace PoDParent.Controllers
 {
@@ -21,7 +23,7 @@ namespace PoDParent.Controllers
         public void Reward(RewardModel modelData)
         {
             TelemetryClient client = new TelemetryClient();
-            client.InstrumentationKey = "15029e3b-b0b2-4b53-88a2-4c4f7f6a6b0c";
+            client.InstrumentationKey = ConfigurationManager.AppSettings["ikey"];
             client.TrackMetric("Distance", modelData.RewardValueIntData);
         }
 
@@ -30,7 +32,6 @@ namespace PoDParent.Controllers
         {            
             string appid = ConfigurationManager.AppSettings["appid_1"];
             string apikey = ConfigurationManager.AppSettings["apikey_1"];
-
             int balance = AppInsightsDAL.GetDailyDistanceBalance(appid, apikey);
             return balance;
              
@@ -39,8 +40,20 @@ namespace PoDParent.Controllers
         // GET: Form
         public void ShutDown()
         {
-         
+            SendMessageToDevice("shutdown");
 
         }
+
+        // Post: Form
+        public void SendMessageToDevice(string message)
+        {
+            string connectionString = ConfigurationManager.AppSettings["iothub"];
+            var serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+            var commandMessage = new Message(Encoding.ASCII.GetBytes(message));
+            serviceClient.SendAsync("myFirstDevice", commandMessage).Wait();
+
+        }
+
+
     }
 }
